@@ -6,11 +6,17 @@ class Connect
     @player2 = "\u26ab"
   end
 
+  def place_player(column, player, count = 6)
+    return @board[column][count] = player if @board[column][count].nil?
+
+    place_player(column, player, count -= 1) unless @board[column][count].nil?
+  end
+  
+  #? @board[column][count] = player : place_player(column, player, -1)
   def display_board
-    @board[1].last
+    @board
   end
 end
 
-
 bored = Connect.new
-p bored.display_board
+

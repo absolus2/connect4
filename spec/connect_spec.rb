@@ -39,14 +39,31 @@ describe Connect do
   end
 
   describe '#place_player' do
-    context 'when placing a player' do
+    context 'when placing a player in an empty column' do
 
       before do
         @board = game.instance_variable_get(:@board)
+        @player1 = game.instance_variable_get(:@player1)
       end
 
       it 'when picking column 1 change the last value of the array to the player' do
-        expect{ game.place_player(1, ) }.to change{ @board}
+        expect { game.place_player(1, @player1) }.to change { @board[1].last }.from(nil).to(@player1)
+      end
+
+      it 'when picking column 7 change the last value of the array to the player' do
+        expect { game.place_player(7, @player1) }.to change { @board[7].last }.from(nil).to(@player1)
+      end
+    end
+
+    context 'when placing a player in a column with a player already there' do
+      before do
+        @board = game.instance_variable_get(:@board)
+        @player1 = game.instance_variable_get(:@player1)
+        game.place_player(7, @player1)
+      end
+
+      it 'add the player to the second last position' do
+        expect { game.place_player(7, @player1) }.to change { @board[7][5] }.from(nil).to(@player1)
       end
 
     end
