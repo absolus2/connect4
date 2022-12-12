@@ -63,9 +63,47 @@ describe Connect do
       end
 
       it 'add the player to the second last position' do
-        expect { game.place_player(7, @player1) }.to change { @board[7][5] }.from(nil).to(@player1)
+        expect { game.place_player(7, @player1) }.to change { @board[7][4] }.from(nil).to(@player1)
       end
 
+      it 'keeps the same length of 6 for the array' do
+        expect(@board[1].length).to eq(6)
+      end
+    end
+
+    context 'when a column is full' do
+      before do
+        @board = game.instance_variable_get(:@board)
+        @player1 = game.instance_variable_get(:@player1)
+        6.times { game.place_player(1, @player1) }
+      end
+
+      it 'returns a message about the column being full' do
+        allow(game).to receive(:gets).and_return('2')
+        expect(game).to receive(:puts).with('Please try another column, That one is full already!').once
+        game.place_player(1, @player1)
+      end
+
+      it 'returns a message about the column being full twice' do
+        allow(game).to receive(:gets).and_return('1', '2')
+        expect(game).to receive(:puts).with('Please try another column, That one is full already!').twice
+        game.place_player(1, @player1)
+      end
+    end
+  end
+
+  describe '#victory?' do
+    let(:player1) { game.instance_variable_get(:@player1) }
+
+    context 'first column has 4 in a row' do
+
+      before do
+        4.times { game.place_player(1, player1) }
+      end
+
+      it 'return true for a victory' do
+        expect(game.victory?(player1)).to be(true)
+      end
     end
   end
 end
