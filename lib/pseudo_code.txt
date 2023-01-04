@@ -1,0 +1,55 @@
+def diagonal_victory(player)
+    get the first item from the first column
+    check the other columns and see if the key value of those columns are +1 of the first
+        if so then take that item and check the next column until you got 4
+    end if 4
+end
+
+bored.place_player(1, "\u26aa")
+bored.place_player(2, "\u26ab")
+bored.place_player(2, "\u26aa")
+bored.place_player(3, "\u26ab")
+bored.place_player(3, "\u26ab")
+bored.place_player(3, "\u26aa")
+bored.place_player(4, "\u26ab")
+bored.place_player(4, "\u26ab")
+bored.place_player(4, "\u26ab")
+bored.place_player(4, "\u26aa")
+
+diagonal up
+bored.place_player(1, "\u26aa")
+bored.place_player(1, "\u26aa")
+bored.place_player(2, "\u26ab")
+bored.place_player(2, "\u26ab")
+bored.place_player(2, "\u26aa")
+bored.place_player(3, "\u26ab")
+bored.place_player(3, "\u26ab")
+bored.place_player(3, "\u26ab")
+bored.place_player(3, "\u26aa")
+bored.place_player(4, "\u26ab")
+bored.place_player(4, "\u26ab")
+bored.place_player(4, "\u26ab")
+bored.place_player(4, "\u26ab")
+bored.place_player(4, "\u26aa")
+
+diagonal down
+4.times { bored.place_player(1, "\u26ab") }
+3.times { bored.place_player(2, "\u26ab") }
+2.times { bored.place_player(3, "\u26ab") }
+bored.place_player(4, "\u26ab")
+count = 0
+4.times { bored.place_player(count += 1, "\u26aa")}
+bored.display_board
+
+
+
+base working but not completely 
+
+players[count].each do |key, value| 
+        players.delete(count)
+        players.each_value do |item|
+          counted += 1 if item[key -= 1]
+        end
+        flag = true if counted == 3
+        count += 1
+      end
