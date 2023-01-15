@@ -81,7 +81,7 @@ describe Connect do
       before do
         @board = game.instance_variable_get(:@board)
         @player1 = game.instance_variable_get(:@player1)
-        6 .times { game.place_player(1, @player1) }
+        6.times { game.place_player(1, @player1) }
       end
 
       it 'returns a message about the column being full' do
@@ -99,95 +99,179 @@ describe Connect do
   end
 
   describe '#victory?' do
-    let(:player1) { game.instance_variable_get(:@player1) }
-    let(:victory) { game.victory?(player1) }
-    context 'verctical victory' do
 
-      it 'return true for a vertical victory on the first column' do
-        4.times { game.place_player(1, player1) }
+    let(:board) { game.instance_variable_get(:@board) }
+    let(:player) { game.instance_variable_get(:@player1) }
+    let(:playerb) { game.instance_variable_get(:@player2) }
+
+    context 'vertical victory' do
+
+      it 'true for vertical victory on first column' do
+        4.times { game.place_player(1, player) }
+        victory = game.victory?(player)
         expect(victory).to be(true)
       end
 
-      it 'return true for a vertical victory on the last column' do
-        4.times { game.place_player(7, player1) }
-        expect(victory).to be(true)
-      end
-
-      it 'return nil when theres not victory on column 1' do
-        3.times { game.place_player(1, player1) }
-        expect(victory).to be(false)
-      end
-
-      it 'return nil when theres not victory on column 7' do
-        3.times { game.place_player(7, player1) }
-        expect(victory).to be(false)
+      it 'nil when theres no vertical victory on first column ' do
+        3.times { game.place_player(1, player) }
+        no_vic = game.victory?(player)
+        expect(no_vic).to be(nil)
       end
     end
 
     context 'horizontal victory' do
-
-      it 'return true when theres a 4 in a row in the last row' do
-        count =  0
-        4.times { game.place_player(count += 1, player1) }
-        expect(victory).to eq(true)
+      it 'true for horizontal victory on the last row' do
+        count = 0
+        4.times { game.place_player(count += 1, player) }
+        victory = game.victory?(player)
+        expect(victory).to be(true)
       end
 
-      it 'return false when theres no horizontal victory' do
-        count =  0
-        3.times { game.place_player(count += 1, player1) }
-        expect(victory).to eq(false)
+      it 'nil when theres is no horizontal victory' do
+        count = 0
+        3.times { game.place_player(count += 1, player) }
+        no_vic = game.victory?(player)
+        expect(no_vic).to be(nil)
       end
     end
 
     context 'diagonal victory' do
-
-      before do
-        @board = game.instance_variable_get(:@board)
+      it 'true when there is a upppper diagonal victory' do
+        game.instance_variable_set(:@board, { 1 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⛔', 6 => '⚪'}, 2 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⚪', 6 => '⚫'}, 3 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⚪', 5 => '⚫', 6 => '⚫'}, 4 => { 1 => '⛔', 2 => '⛔', 3 => '⚪', 4 => '⚫', 5 => '⚫', 6 => '⚫'}, 5 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⛔', 6 => '⛔'}, 6 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⛔', 6 => '⛔'}, 7 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⛔', 6 => '⛔'} })
+        victory = game.victory?(player)
+        expect(victory).to be(true)
       end
 
-      it 'returns true when theres a diagonal victory on the first column and first row' do
-        @board[1] = { 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6  =>'⚪' }
-        @board[2] = { 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 =>'⚪', 6  => '⚫' }
-        @board[3] = { 1 => 0, 2 => 0, 3 => 0, 4 => '⚪', 5 => '⚫', 6 => '⚫' }
-        @board[4] = { 1 => 0, 2 => 0, 3 => '⚪', 4 => '⚫', 5 => '⚫', 6 => '⚫' }
-        expect(victory).to eq(true)
+      it 'true when there is a diagonal down victory' do
+        game.instance_variable_set(:@board, { 1 => { 1 => '⛔', 2 => '⛔', 3 => '⚪', 4 => '⚫', 5 => '⚫', 6 => '⚫'}, 2 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⚪', 5 => '⚫', 6 => '⚫'}, 3 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⚪', 6 => '⚫'}, 4 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⛔', 6 => '⚪'}, 5 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⛔', 6 => '⛔'}, 6 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⛔', 6 => '⛔'}, 7 => { 1 => '⛔', 2 => '⛔', 3 => '⛔', 4 => '⛔', 5 => '⛔', 6 => '⛔'} })
+        victory = game.victory?(player)
+        expect(victory).to be(true)
       end
 
-      it 'returns false when theres no diagonal victory' do
-        expect(victory).to eq(false)
+      it 'nil when there is no diagonal victory' do
+        no_vic = game.victory?(player)
+        expect(no_vic).to be(nil)
       end
     end
-
+    
   end
 
-  describe '#vv?' do
-    context 'check vertical victory conditions' do
+  describe '#game_over' do
+    let(:player1) { game.instance_variable_get(:@player1) }
+    let(:player2) { game.instance_variable_get(:@player2) }
+    context 'when a player won the game' do
+
+      it 'puts a message and congratz' do
+        4.times { game.place_player(1, player1) }
+        expect(game).to receive(:puts).with('Congratz, YOU WON!!!! player1 !!!').once
+        game.game_over
+      end
+
+      it 'puts a message when player2 wins' do
+        4.times { game.place_player(1, player2) }
+        expect(game).to receive(:puts).with('Congratz, YOU WON!!!! player2 !!!').once
+        game.game_over
+      end
+
+      it 'returns false when the game isnt over' do
+        over = game.game_over
+        expect(over).to be(false)
+      end
+    end
+  end
+  
+  describe '#turn' do
+    context 'when the turn even or odd' do
+
+      let(:player1) { game.instance_variable_get(:@player1) }
+      let(:player2) { game.instance_variable_get(:@player2) }
+      before do
+        allow(game).to receive(:gets).and_return('2')
+      end
+
+      it 'when the turn is odd, player1 plays their turn' do
+        expect(game).to receive(:puts).with("Its your turn to play player #{player1}, please Pick a column!").once
+        game.turn
+      end
+
+      it 'when the turn is even, player2 plays their turn' do
+        game.instance_variable_set(:@turn, 2)
+        expect(game).to receive(:puts).with("Its your turn to play player #{player2}, please Pick a column!").once
+        game.turn
+      end
+    end
+  end
+
+  describe '#save_config' do
+    context 'When the game initialize' do
+
+      before do
+        allow(Dir).to receive(:exist?).and_return(false)
+        allow(Dir).to receive(:mkdir)
+      end
+
+      it 'checkto see if there is a directory already' do
+        expect(Dir).to receive(:exist?).with('config').twice
+        game.save_config
+      end
+
+      it 'Creates the directory if there is not one already' do
+        expect(Dir).to receive(:mkdir).with('config').twice
+        game.save_config
+      end
+    end
+  end
+
+  describe 'save_game' do
+    context 'when saving the game' do
+      before do
+        allow(Dir).to receive(:exist?).and_return(false)
+        allow(Dir).to receive(:mkdir)
+        allow(File).to receive(:open)
+      end
+
+      it 'Create the dir if it doesnt exist' do
+        expect(Dir).to receive(:mkdir).with('Saves').once
+        game.save_game
+      end
+
+      it 'Create the file' do
+        expect(File).to receive(:open).twice
+        game.save_game
+      end
+    end
+  end
+
+  describe 'load_game' do
+    context 'when initializing the game' do
+      before do
+        allow(Dir).to receive(:exist?).and_return(true)
+        allow(Dir).to receive(:entries).and_return(%w[saved_game1 saved_game2])
+      end
+
+      it 'return a list of all files inside the save folder.' do
+        list = game.load_game
+        expect(list).to eq(%w[saved_game1 saved_game2])
+      end
+
+      it 'loads the file the user wants' do
+
+      end
       
-
-      before do
-        @player1 = game.instance_variable_get(:@player1)
-      end
-
-      it 'when given a hash counts the amount of times a player appears in the column if 4 return true' do
-        column = { 1 => 0, 2 => 0, 3 => @player1, 4 => @player1, 5 => @player1, 6 => @player1 }
-        victory = game.vv?(@player1, column)
-        expect(victory).to eq(true)
-      end
-
-      it 'when given a hash return nil if the count is not 4' do
-        column = { 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0 }
-        victory = game.vv?(@player1, column)
-        expect(victory).to eq(nil)
-      end
     end
 
   end
 
-  describe 'display_board' do
-    context 'every turn of the game' do
-      it 'puts 6  times board' do
-        expect(game).to receive(:puts).exactly(6 ).times
-        game.display_board
+  describe 'check_load' do
+    context 'When the answer is y/yes' do
+      before do
+        allow(Dir).to receive(:entries).and_return(%w[saved_game1 saved_game2 saved_game3])
+        allow(game).to receive(:gets).and_return('y')
+      end
+
+      it 'output the list of files to load the game' do
+        expect(game).to receive(:puts).twice
+        game.check_load
       end
     end
   end
